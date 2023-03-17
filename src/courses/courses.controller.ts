@@ -14,8 +14,8 @@ export class CoursesController {
   //CREATE COURSE
   @Post()
   @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
-  create(@UploadedFile() photo: Express.Multer.File,@Body() createCourseDto: CreateCourseDto) {
-    return this.coursesService.create(createCourseDto,photo.filename)
+  create(@Body() createCourseDto: CreateCourseDto,@UploadedFile() photo: Express.Multer.File) {
+    return this.coursesService.create(createCourseDto,photo?.filename)
   } 
 
   //GET ALL COURSES
@@ -41,6 +41,6 @@ export class CoursesController {
   //DELETE COURSE
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+    return this.coursesService.remove(id);
   }
 }

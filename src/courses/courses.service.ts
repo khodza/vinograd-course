@@ -4,7 +4,8 @@ import { Course } from './course.model';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import mongoose, { Model, ObjectId } from 'mongoose';
-
+import * as fs from 'fs'
+import { join } from 'path';
 @Injectable()
 export class CoursesService {
   constructor(
@@ -50,6 +51,9 @@ export class CoursesService {
       }
       let updateOpt:object;
       if(photoName){
+         const fileName = (await this.courseModel.findById(id).select('photo')).photo
+         const filePath  = join(__dirname,'../..','uploads','courses',fileName)
+         await fs.promises.unlink(filePath);
          updateOpt ={...updateCourseDto,photo:photoName}
       }else{
         updateOpt ={...updateCourseDto}
@@ -65,7 +69,18 @@ export class CoursesService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string):Promise<{message:string}> {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new BadRequestException(`Provide valid ID: ${id}`);
+      }
+      const deletedCourse = await this.courseModel.findByIdAndDelete(id);
+      if (!deletedCourse) {
+        throw new BadRequestException(`No course with this ID : ${id}`);
+      }
+      return { message: `Course with ID ${id} has been deleted` };
+    } catch (err) {
+      throw new BadRequestException(err.message, err);
+    }
   }
 }

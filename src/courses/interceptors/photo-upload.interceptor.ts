@@ -14,7 +14,7 @@ export class MulterOptions {
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
           return cb(new BadRequestException('Only image files are allowed!'), false);
         }
         if (file.size > 15728640) {
