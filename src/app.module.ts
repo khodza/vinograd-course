@@ -10,6 +10,7 @@ import { AuthService } from './auth/auth.service';
 import { jwtConstance } from './auth/constants/jwt-constants';
 import { AuthController } from './auth/auth.controller';
 import { CoursesModule } from './courses/courses.module';
+import { TeachersModule } from './teachers/teachers.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { CoursesModule } from './courses/courses.module';
       }),
       inject: [ConfigService],
     }),
-    CoursesModule,
+    CoursesModule,TeachersModule,
   ],
   controllers: [AppController],
   providers: [

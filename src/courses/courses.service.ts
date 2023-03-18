@@ -74,6 +74,13 @@ export class CoursesService {
       if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new BadRequestException(`Provide valid ID: ${id}`);
       }
+      const course = (await this.courseModel.findById(id).select('photo'))
+      if(!course){
+        throw new BadRequestException(`No course photo with this ID : ${id}`)
+      }
+      const fileName = course.photo
+      const filePath  = join(__dirname,'../..','uploads','courses',fileName)
+      await fs.promises.unlink(filePath);
       const deletedCourse = await this.courseModel.findByIdAndDelete(id);
       if (!deletedCourse) {
         throw new BadRequestException(`No course with this ID : ${id}`);

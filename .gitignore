@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /uploads/courses/*
+/uploads/teachers/*
 # Logs
 logs
 *.log
