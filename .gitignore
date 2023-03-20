@@ -4,6 +4,7 @@
 /uploads/courses/*
 /uploads/teachers/*
 /uploads/news/*
+.env
 
 # Logs
 logs
