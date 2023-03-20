@@ -32,7 +32,7 @@ async findAll():Promise<News[]> {
   }
 }
 
-  async update(id: string, updateNewsDto: UpdateNewsDto,photos:Array<Express.Multer.File>) {
+  async update(id: string, updateNewsDto: UpdateNewsDto,photos?:Array<Express.Multer.File>) {
     try{
       if (!mongoose.Types.ObjectId.isValid(id)){
         throw new BadRequestException('Provide valid ID')
