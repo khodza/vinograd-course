@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname,join } from 'path';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -12,6 +13,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   //CREATE COURSE
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
   create(@Body() createCourseDto: CreateCourseDto,@UploadedFile() photo: Express.Multer.File) {
@@ -33,13 +35,15 @@ export class CoursesController {
 
   //UPDATE COURSE
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto,@UploadedFile() photo:Express.Multer.File) {
-    return this.coursesService.update(id, updateCourseDto,photo.filename);
+    return this.coursesService.update(id, updateCourseDto,photo?.filename);
   }
 
   //DELETE COURSE
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.coursesService.remove(id);
   }

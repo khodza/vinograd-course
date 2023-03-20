@@ -7,8 +7,6 @@ import { User } from './users.model';
 import { updatePassword } from './dto/update-password.dto';
 import * as bycypt from 'bcrypt';
 
-import{AuthService} from '../auth/auth.service'
-import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
   constructor(

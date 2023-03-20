@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TeachersService } from './teachers.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { MulterOptions } from './interceptors/photo-upload.interceptor';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('teachers')
 export class TeachersController {
@@ -11,6 +12,7 @@ export class TeachersController {
 
   //CREATE TEACHER
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
   create(@Body() createTeachersDto: CreateTeacherDto,@UploadedFile() photo: Express.Multer.File) {
     return this.teachersService.create(createTeachersDto,photo?.filename)
@@ -31,6 +33,7 @@ export class TeachersController {
 
   //UPDATE TEACHER
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
   update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto,@UploadedFile() photo:Express.Multer.File) {
     return this.teachersService.update(id, updateTeacherDto,photo?.filename);
@@ -38,6 +41,7 @@ export class TeachersController {
 
   //DELETE TEACHER
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.teachersService.remove(id);
   }
