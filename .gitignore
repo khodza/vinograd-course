@@ -3,6 +3,8 @@
 /node_modules
 /uploads/courses/*
 /uploads/teachers/*
+/uploads/news/*
+
 # Logs
 logs
 *.log

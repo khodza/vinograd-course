@@ -11,6 +11,7 @@ import { jwtConstance } from './auth/constants/jwt-constants';
 import { AuthController } from './auth/auth.controller';
 import { CoursesModule } from './courses/courses.module';
 import { TeachersModule } from './teachers/teachers.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { TeachersModule } from './teachers/teachers.module';
       }),
       inject: [ConfigService],
     }),
-    CoursesModule,TeachersModule,
+    CoursesModule,TeachersModule, NewsModule,
   ],
   controllers: [AppController],
   providers: [
