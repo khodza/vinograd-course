@@ -43,6 +43,9 @@ async findAll():Promise<News[]> {
       })
       const newNews ={...updateNewsDto,...newPhotos}
       const updatedNews = await this.newsModel.findByIdAndUpdate(id,newNews)
+      if(!updatedNews){
+        throw new BadRequestException('No news with given ID')
+      }
       return updatedNews;
     }catch(err){
       throw new BadRequestException(err.message, err);

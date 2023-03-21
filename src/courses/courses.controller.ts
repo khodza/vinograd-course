@@ -6,7 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { MulterOptions } from './interceptors/photo-upload.interceptor';
+import { MulterOptions } from '../multerOptions/photo-single-upload.interceptor';
 
 @Controller('courses')
 export class CoursesController {
@@ -15,7 +15,7 @@ export class CoursesController {
   //CREATE COURSE
   @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
+  @UseInterceptors(FileInterceptor('photo',new MulterOptions('courses').multerOptions))
   create(@Body() createCourseDto: CreateCourseDto,@UploadedFile() photo: Express.Multer.File) {
     return this.coursesService.create(createCourseDto,photo?.filename)
   } 
@@ -36,7 +36,7 @@ export class CoursesController {
   //UPDATE COURSE
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('photo',new MulterOptions()))
+  @UseInterceptors(FileInterceptor('photo',new MulterOptions('courses').multerOptions))
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto,@UploadedFile() photo:Express.Multer.File) {
     return this.coursesService.update(id, updateCourseDto,photo?.filename);
   }

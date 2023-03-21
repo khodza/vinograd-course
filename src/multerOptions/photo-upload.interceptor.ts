@@ -8,10 +8,8 @@ export class MulterOptions implements MulterOptionsInterface {
   constructor(private readonly destination: string) {}
 
   storage = diskStorage({
-    destination: join(__dirname, '../../..', 'uploads', this.destination),
+    destination: join(__dirname, '../..', 'uploads', this.destination),
     filename: (req, file, cb) => {
-      // const origName = file.originalname.replace(/\s+/g, '');
-      // const name = `${origName}-${Date.now()}`;
       return cb(null, `${file.fieldname}${extname(file.originalname)}`);
     },
   });
