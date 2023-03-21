@@ -9,6 +9,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { CoursesModule } from './courses/courses.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { NewsModule } from './news/news.module';
+import { TextsModule } from './texts/texts.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { NewsModule } from './news/news.module';
       }),
       inject: [ConfigService],
     }),
-    CoursesModule,TeachersModule, NewsModule,
+    CoursesModule,TeachersModule, NewsModule, TextsModule,
   ],
   controllers: [AppController],
   providers: [
