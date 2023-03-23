@@ -13,6 +13,9 @@ export class CoursesService {
   ) {}
   async create(createCourseDto: CreateCourseDto,fileName:string): Promise<Course> {
     try {
+      if(!fileName){
+        throw new BadRequestException('Upload course photo');
+        }
       const course  ={...createCourseDto,photo:fileName}
       const newCourse = await this.courseModel.create(course);
       return newCourse;

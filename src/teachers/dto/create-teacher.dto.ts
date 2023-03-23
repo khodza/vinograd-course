@@ -3,5 +3,8 @@ import { IsString, IsNumber, isString } from "class-validator";
 
 export class CreateTeacherDto {
   @IsString()
-  name: string;
+  name_uzb: string;
+
+  @IsString()
+  name_rus: string;
 }

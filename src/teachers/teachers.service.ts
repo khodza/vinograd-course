@@ -13,6 +13,9 @@ export class TeachersService {
   ) {}
   async create(createTeacherDto: CreateTeacherDto,fileName:string): Promise<Teacher> {
     try {
+      if(!fileName){
+      throw new BadRequestException('Upload teachers photo');
+      }
       const teacher  ={...createTeacherDto,photo:fileName}
       const newTeacher = await this.teacherModel.create(teacher);
       return newTeacher;

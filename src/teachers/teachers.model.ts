@@ -6,9 +6,15 @@ import { Document } from 'mongoose';
 export class Teacher extends Document {
   @Prop({
     type: String,
-    required: [true, 'Add name'],
+    required: [true, 'Add uzb name'],
   })
-  name: string;
+  name_uzb: string;
+
+  @Prop({
+    type: String,
+    required: [true, 'Add rus name'],
+  })
+  name_rus: string;
 
   @Prop({type:String,required:[true,'Please add photo to teacher']})
   photo:string;
