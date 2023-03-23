@@ -56,7 +56,9 @@ export class CoursesService {
       if(photoName){
          const fileName = (await this.courseModel.findById(id).select('photo')).photo
          const filePath  = path.join(__dirname,'../..','uploads','courses',fileName)
-         await fs.promises.unlink(filePath);
+         if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }         
          updateOpt ={...updateCourseDto,photo:photoName}
       }else{
         updateOpt ={...updateCourseDto}
@@ -83,7 +85,9 @@ export class CoursesService {
       }
       const fileName = course.photo
       const filePath  = path.join(__dirname,'../..','uploads','courses',fileName)
-      await fs.promises.unlink(filePath);
+      if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+      }
       const deletedCourse = await this.courseModel.findByIdAndDelete(id);
       if (!deletedCourse) {
         throw new BadRequestException(`No course with this ID : ${id}`);

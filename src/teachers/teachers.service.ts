@@ -56,7 +56,9 @@ export class TeachersService {
       if(photoName){
          const fileName = (await this.teacherModel.findById(id).select('photo')).photo
          const filePath  = path.join(__dirname,'../..','uploads','teachers',fileName)
-         await fs.promises.unlink(filePath);
+         if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }
          updateOpt ={...updateTeacherDto,photo:photoName}
       }else{
         updateOpt ={...updateTeacherDto}
