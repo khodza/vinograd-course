@@ -83,7 +83,9 @@ export class TeachersService {
       }
       const fileName = teacher.photo
       const filePath  = path.join(__dirname,'../..','uploads','teachers',fileName)
-      await fs.promises.unlink(filePath);
+      if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+      }
       const deletedTeacher = await this.teacherModel.findByIdAndDelete(id);
       if (!deletedTeacher) {
         throw new BadRequestException(`No teacher with this ID : ${id}`);
