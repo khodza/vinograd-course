@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable,HttpException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Teacher } from './teachers.model';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import mongoose, { Model } from 'mongoose';
 import * as fs from 'fs'
-import { join } from 'path';
+import * as path from 'path';
 @Injectable()
 export class TeachersService {
   constructor(
@@ -52,7 +52,7 @@ export class TeachersService {
       let updateOpt:object;
       if(photoName){
          const fileName = (await this.teacherModel.findById(id).select('photo')).photo
-         const filePath  = join(__dirname,'../..','uploads','teachers',fileName)
+         const filePath  = path.join(__dirname,'../..','uploads','teachers',fileName)
          await fs.promises.unlink(filePath);
          updateOpt ={...updateTeacherDto,photo:photoName}
       }else{
@@ -79,7 +79,7 @@ export class TeachersService {
         throw new BadRequestException(`No teacher photo with this ID : ${id}`)
       }
       const fileName = teacher.photo
-      const filePath  = join(__dirname,'../..','uploads','teachers',fileName)
+      const filePath  = path.join(__dirname,'../..','uploads','teachers',fileName)
       await fs.promises.unlink(filePath);
       const deletedTeacher = await this.teacherModel.findByIdAndDelete(id);
       if (!deletedTeacher) {
@@ -90,4 +90,24 @@ export class TeachersService {
       throw new BadRequestException(err.message, err);
     }
   }
+
+    //PHOTO
+    async getPhotoPreview(name: string,res:any): Promise<void> {
+      const filePath = path.join(__dirname, '../../uploads/teachers', `${name}`);
+      if (!fs.existsSync(filePath)) {
+        throw new HttpException('File not found', 404);
+      }
+  
+      const stream = fs.createReadStream(filePath);
+      stream.on('error', (error) => {
+        throw new HttpException('Internal server error', 500);
+      });
+  
+      res.set('Content-Type', 'image/jpeg');
+      res.on('close', () => {
+        stream.destroy();
+      });
+  
+      stream.pipe(res);
+    }
 }

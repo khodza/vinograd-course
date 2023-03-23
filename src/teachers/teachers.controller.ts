@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards, Query, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TeachersService } from './teachers.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { MulterOptions } from 'src/multerOptions/photo-single-upload.interceptor';
+import { Response } from 'express';
 
 @Controller('teachers')
 export class TeachersController {
@@ -24,6 +25,11 @@ export class TeachersController {
     return this.teachersService.findAll();
   }
 
+ //GET IMAGE BY NAME
+ @Get('photo')
+ async getPhotoPreview(@Query('name') name: string, @Res() res: Response) {
+   await this.teachersService.getPhotoPreview(name,res);
+ }
 
   //GET TEACHER BY ID
   @Get(':id')

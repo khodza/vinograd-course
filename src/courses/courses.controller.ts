@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, BadRequestException, UseGuards, Res, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname,join } from 'path';
@@ -26,6 +26,11 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
+  //GET IMAGE BY NAME
+  @Get('photo')
+  async getPhotoPreview(@Query('name') name: string, @Res() res: Response) {
+   await this.coursesService.getPhotoPreview(name,res);
+  }
 
   //GET COURSE BY ID
   @Get(':id')

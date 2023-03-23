@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable ,HttpException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from './course.model';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import mongoose, { Model, ObjectId } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import * as fs from 'fs'
-import { join } from 'path';
+import * as path from 'path';
 @Injectable()
 export class CoursesService {
   constructor(
@@ -52,7 +52,7 @@ export class CoursesService {
       let updateOpt:object;
       if(photoName){
          const fileName = (await this.courseModel.findById(id).select('photo')).photo
-         const filePath  = join(__dirname,'../..','uploads','courses',fileName)
+         const filePath  = path.join(__dirname,'../..','uploads','courses',fileName)
          await fs.promises.unlink(filePath);
          updateOpt ={...updateCourseDto,photo:photoName}
       }else{
@@ -79,7 +79,7 @@ export class CoursesService {
         throw new BadRequestException(`No course photo with this ID : ${id}`)
       }
       const fileName = course.photo
-      const filePath  = join(__dirname,'../..','uploads','courses',fileName)
+      const filePath  = path.join(__dirname,'../..','uploads','courses',fileName)
       await fs.promises.unlink(filePath);
       const deletedCourse = await this.courseModel.findByIdAndDelete(id);
       if (!deletedCourse) {
@@ -89,5 +89,25 @@ export class CoursesService {
     } catch (err) {
       throw new BadRequestException(err.message, err);
     }
+  }
+
+  //PHOTO
+  async getPhotoPreview(name: string,res:any): Promise<void> {
+    const filePath = path.join(__dirname, '../../uploads/courses', `${name}`);
+    if (!fs.existsSync(filePath)) {
+      throw new HttpException('File not found', 404);
+    }
+
+    const stream = fs.createReadStream(filePath);
+    stream.on('error', (error) => {
+      throw new HttpException('Internal server error', 500);
+    });
+
+    res.set('Content-Type', 'image/jpeg');
+    res.on('close', () => {
+      stream.destroy();
+    });
+
+    stream.pipe(res);
   }
 }

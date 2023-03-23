@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException,HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { News } from './news.model';
 import mongoose, { Model } from 'mongoose';
-
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class NewsService {
@@ -52,4 +53,22 @@ async findAll():Promise<News[]> {
     }
   }
 
+  async getPhotoPreview(name: string,res:any): Promise<void> {
+    const filePath = path.join(__dirname, '../../uploads/news', `${name}`);
+    if (!fs.existsSync(filePath)) {
+      throw new HttpException('File not found', 404);
+    }
+
+    const stream = fs.createReadStream(filePath);
+    stream.on('error', (error) => {
+      throw new HttpException('Internal server error', 500);
+    });
+
+    res.set('Content-Type', 'image/jpeg');
+    res.on('close', () => {
+      stream.destroy();
+    });
+
+    stream.pipe(res);
+  }
 }
