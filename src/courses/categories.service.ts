@@ -3,6 +3,7 @@ import { BadRequestException, Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dot';
 
 
 @Injectable()
@@ -39,6 +40,22 @@ export class CategoriesService {
           const category = await this.categoryModel.findById(id);
           if (!category) {
             throw new BadRequestException(`No category with this ID : ${id}`);
+          }
+          return category;
+        } catch (err) {
+          throw new BadRequestException(err.message,err);
+        }
+      }
+
+      async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+        try {
+          if (!mongoose.Types.ObjectId.isValid(id)){
+            throw new BadRequestException('Provide valid ID')
+          }
+          await this.categoryModel.updateOne({_id:id}, updateCategoryDto,{runValidators:true});
+          const category =await this.findOne(id)
+          if (!category) {
+            throw new BadRequestException(`No category with this id ${id}`);
           }
           return category;
         } catch (err) {

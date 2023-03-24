@@ -9,6 +9,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { MulterOptions } from '../multerOptions/photo-single-upload.interceptor';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoriesService } from './categories.service';
+import { UpdateCategoryDto } from './dto/update-category.dot';
 
 @Controller('courses')
 export class CoursesController {
@@ -33,6 +34,13 @@ export class CoursesController {
   @Get('categories/:id')
   findOneCategory(@Param('id') id){
     return this.categoryService.findOne(id)
+  }
+
+  //UPDATE CATEGORY
+  @Patch('categories/:id')
+  @UseGuards(JwtAuthGuard)
+  updateCATEGORY(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
   //DELETE CATEGORY
