@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsString, IsNumber, isString } from "class-validator";
+import { IsString, IsNumber, IsArray, ArrayNotEmpty, ArrayUnique} from "class-validator";
 
 export class CreateCourseDto {
   @IsString()
@@ -21,6 +21,8 @@ export class CreateCourseDto {
   @IsNumber()
   price: number;
 
-  @IsString()
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
   categories:String;
 }

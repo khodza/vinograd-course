@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-
+import * as mongoose from 'mongoose';
+import { Categories } from './categories.model';
 
 @Schema()
 export class Course extends Document {
@@ -40,8 +41,8 @@ export class Course extends Document {
   })
   startDate: Date;
   
-  @Prop({type:String,default:"none"})
-  categories:string;
+  @Prop({ type:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'Categories' }] })
+  categories: Categories[];
 
   @Prop({type:String,required:[true,'Please add photo to course']})
   photo:string;

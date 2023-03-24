@@ -7,10 +7,43 @@ import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { MulterOptions } from '../multerOptions/photo-single-upload.interceptor';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { CategoriesService } from './categories.service';
 
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(private readonly coursesService: CoursesService,private readonly categoryService:CategoriesService) {}
+
+    //CATEGORIES
+
+  //CREATE CATEGORY
+  @UseGuards(JwtAuthGuard)
+  @Post('categories')
+  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoryService.create(createCategoryDto)
+  }
+
+  //GET ALL CATEGORIES
+  @Get('categories')
+  findAllCategories(){
+    return this.categoryService.findAll()
+  }
+
+  //GET CATEGORY BY ID
+  @Get('categories/:id')
+  findOneCategory(@Param('id') id){
+    return this.categoryService.findOne(id)
+  }
+
+  //DELETE CATEGORY
+  @UseGuards(JwtAuthGuard)
+  @Delete('/categories/:id')
+  deleteCategory(@Param('id') id:string){
+    return this.categoryService.remove(id)
+  }
+
+
+  //COURSES
 
   //CREATE COURSE
   @UseGuards(JwtAuthGuard)

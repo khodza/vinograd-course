@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CourseSchema } from './course.model';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstance } from 'src/auth/constants/jwt-constants';
+import { CategoriesSchema } from './categories.model';
+import { CategoriesService } from './categories.service';
 @Module({
-  imports:[MongooseModule.forFeature([{name:'Course',schema:CourseSchema}]),JwtModule.registerAsync(jwtConstance)],
+  imports:[MongooseModule.forFeature([{name:'Course',schema:CourseSchema}]),MongooseModule.forFeature([{name:'Categories',schema:CategoriesSchema}]),JwtModule.registerAsync(jwtConstance)],
   controllers: [CoursesController],
-  providers: [CoursesService]
+  providers: [CoursesService,CategoriesService]
 })
 export class CoursesModule {}

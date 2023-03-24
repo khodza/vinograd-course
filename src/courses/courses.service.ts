@@ -25,7 +25,7 @@ export class CoursesService {
   }
   async findAll():Promise<Course[]> {
     try {
-      const courses = await this.courseModel.find();
+      const courses = await this.courseModel.find().populate('categories').exec();;
       return courses;
     } catch (err) {
       throw new BadRequestException(err);
