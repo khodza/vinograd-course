@@ -25,7 +25,7 @@ export class CoursesService {
   }
   async findAll():Promise<Course[]> {
     try {
-      const courses = await this.courseModel.find().populate('categories').exec();;
+      const courses = await this.courseModel.find().populate('categories').exec();
       return courses;
     } catch (err) {
       throw new BadRequestException(err);
@@ -37,7 +37,7 @@ export class CoursesService {
       if (!mongoose.Types.ObjectId.isValid(id)){
         throw new BadRequestException('Provide valid ID')
       }
-      const course = await this.courseModel.findById(id);
+      const course = await this.courseModel.findById(id).populate('categories').exec();
       if (!course) {
         throw new BadRequestException(`No course with this ID : ${id}`);
       }
