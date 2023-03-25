@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsString, IsNumber, IsArray, ArrayNotEmpty, ArrayUnique} from "class-validator";
+import { IsString, IsNumber, IsArray, ArrayNotEmpty, ArrayUnique, IsOptional} from "class-validator";
 
 export class CreateCourseDto {
   @IsString()
@@ -12,6 +12,8 @@ export class CreateCourseDto {
   content_rus: string;
 
   @IsString()
+
+
   content_uzb: string;
 
   @IsString()
@@ -24,5 +26,6 @@ export class CreateCourseDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayUnique()
+  @IsOptional()
   categories:String;
 }
